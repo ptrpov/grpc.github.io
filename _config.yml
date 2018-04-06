@@ -1,18 +1,21 @@
 kramdown:
   input: GFM
   hard_wrap: false
+  parse_block_html: true
 
 markdown:
   kramdown
 
-baseurl: /grpc.github.io
+baseurl:
 
 githuburl: https://github.com/grpc/grpc.github.io/
 
 sass:
   style: compressed
   
-paginate: 2
+plugins: [jekyll-paginate]
+  
+paginate: 5
 
 paginate_path: "/blog/page:num/"
 

@@ -15,10 +15,10 @@ var playerInfoList = [
     {type: 'yt', key: 'nz-LcdoMYWA'}, 
     {type: 'yt', key: 'sZx3oZt7LVg'}, 
     {type: 'yt', key: 'RvUP7vX2P4s'}, 
-    {type: 'slideshare', key: 'http://www.slideshare.net/sujatatibre/g-rpc-talk-with-intel-3'}, 
-    {type: 'slideshare', key: 'http://www.slideshare.net/VarunTalwar4/grpc-design-and-implementation'},
-    {type: 'slideshare', key: 'http://www.slideshare.net/VarunTalwar4/grpc-overview'},
-    {type: 'slideshare', key: 'http://www.ustream.tv/recorded/86187859'}
+    {type: 'slideshare', key: 'https://www.slideshare.net/sujatatibre/g-rpc-talk-with-intel-3'}, 
+    {type: 'slideshare', key: 'https://www.slideshare.net/VarunTalwar4/grpc-design-and-implementation'},
+    {type: 'slideshare', key: 'https://www.slideshare.net/VarunTalwar4/grpc-overview'},
+    {type: 'slideshare', key: 'https://www.ustream.tv/recorded/86187859'}
 ];  
 
 function createPlayer(key) {
@@ -241,7 +241,7 @@ $.getScript("https://cdn.rawgit.com/google/code-prettify/master/loader/run_prett
 });
 
 // Collapsible navbar menu, using https://github.com/jordnkr/collapsible
-$.getScript("/grpc.github.io/js/jquery.collapsible.js", function(){
+$.getScript("/js/jquery.collapsible.js", function(){
   highlightActive();
   $('.submenu').collapsible();
 });
@@ -254,7 +254,7 @@ $.getScript("/grpc.github.io/js/jquery.collapsible.js", function(){
       noBackToTopLinks: false,
       title: '',
       minimumHeaders: 2,
-      headers: 'h1, h2, h3, h4, h5, h6',
+      headers: 'h2, h3, h4, h5, h6',
       listType: 'ol', // values: [ol|ul]
       showEffect: 'show', // values: [show|slideDown|fadeIn|none]
       showSpeed: 'slow' // set to 0 to deactivate effect

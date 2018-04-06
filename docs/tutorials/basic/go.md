@@ -15,8 +15,7 @@ By walking through this example you'll learn how to:
 - Use the Go gRPC API to write a simple client and server for your service.
 
 It assumes that you have read the [Overview](/docs/index.html) and are familiar
-with [protocol buffers]
-(https://developers.google.com/protocol-buffers/docs/overview). Note that the
+with [protocol buffers](https://developers.google.com/protocol-buffers/docs/overview). Note that the
 example in this tutorial uses the proto3 version of the protocol buffers
 language, which is currently in beta release: you can find out more in the
 [proto3 language
@@ -60,15 +59,14 @@ Then change your current directory to `grpc-go/examples/route_guide`:
 $ cd $GOPATH/src/google.golang.org/grpc/examples/route_guide
 ```
 
-You also should have the relevant tools installed to generate the server and client interface code - if you don't already, follow the setup instructions in [the Go quick start guide](https://github.com/grpc/grpc-go/tree/master/examples).
+You also should have the relevant tools installed to generate the server and client interface code - if you don't already, follow the setup instructions in [the Go quick start guide](/docs/quickstart/go.html).
 
 
 ## Defining the service
 
 Our first step (as you'll know from the [Overview](/docs/index.html)) is to
 define the gRPC *service* and the method *request* and *response* types using
-[protocol buffers]
-(https://developers.google.com/protocol-buffers/docs/overview). You can see the
+[protocol buffers](https://developers.google.com/protocol-buffers/docs/overview). You can see the
 complete .proto file in
 [`examples/route_guide/routeguide/route_guide.proto`](https://github.com/grpc/grpc-go/blob/master/examples/route_guide/routeguide/route_guide.proto).
 
@@ -246,9 +244,10 @@ with the appropriate information, and then `return` it along with an `nil` error
 to tell gRPC that we've finished dealing with the RPC and that the `Feature` can
 be returned to the client.
 
-#### Server-side streaming RPC Now let's look at one of our streaming RPCs.
-`ListFeatures` is a server-side streaming RPC, so we need to send back multiple
-`Feature`s to our client.
+#### Server-side streaming RPC
+
+Now let's look at one of our streaming RPCs. `ListFeatures` is a server-side
+streaming RPC, so we need to send back multiple `Feature`s to our client.
 
 ```go
 func (s *routeGuideServer) ListFeatures(rect *pb.Rectangle, stream pb.RouteGuide_ListFeaturesServer) error {
@@ -275,14 +274,16 @@ finished writing responses. Should any error happen in this call, we return a
 non-`nil` error; the gRPC layer will translate it into an appropriate RPC status
 to be sent on the wire.
 
-#### Client-side streaming RPC Now let's look at something a little more
-complicated: the client-side streaming method `RecordRoute`, where we get a
-stream of `Point`s from the client and return a single `RouteSummary` with
-information about their trip. As you can see, this time the method doesn't have
-a request parameter at all. Instead, it gets a `RouteGuide_RecordRouteServer`
-stream, which the server can use to both read *and* write messages - it can
-receive client messages using its `Recv()` method and return its single response
-using its `SendAndClose()` method.
+#### Client-side streaming RPC
+
+Now let's look at something a little more complicated: the client-side
+streaming method `RecordRoute`, where we get a stream of `Point`s from the
+client and return a single `RouteSummary` with information about their trip. As
+you can see, this time the method doesn't have a request parameter at all.
+Instead, it gets a `RouteGuide_RecordRouteServer` stream, which the server can
+use to both read *and* write messages - it can receive client messages using
+its `Recv()` method and return its single response using its `SendAndClose()`
+method.
 
 ```go
 func (s *routeGuideServer) RecordRoute(stream pb.RouteGuide_RecordRouteServer) error {
@@ -317,9 +318,9 @@ func (s *routeGuideServer) RecordRoute(stream pb.RouteGuide_RecordRouteServer) e
 }
 ```
 
-In the method body we use the `RouteGuide_RecordRouteServer`s `Recv()` method to
+In the method body we use the `RouteGuide_RecordRouteServer`'s `Recv()` method to
 repeatedly read in our client's requests to a request object (in this case a
-`Point`) until there are no more messages: the server needs to check the the
+`Point`) until there are no more messages: the server needs to check the
 error returned from `Read()` after each call. If this is `nil`, the stream is
 still good and it can continue reading; if it's `io.EOF` the message stream has
 ended and the server can return its `RouteSummary`. If it has any other value,

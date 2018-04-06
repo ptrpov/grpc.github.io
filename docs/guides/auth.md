@@ -28,25 +28,24 @@ making a call.
 
 The following authentication mechanisms are built-in to gRPC:
 
-   * **SSL/TLS**: gRPC has SSL/TLS integration and promotes the use of SSL/TLS
-     to authenticate the server, and to encrypt all the data exchanged between
-     the client and the server. Optional mechanisms are available for clients to
-     provide certificates for mutual authentication.
+- **SSL/TLS**: gRPC has SSL/TLS integration and promotes the use of SSL/TLS
+to authenticate the server, and to encrypt all the data exchanged between
+the client and the server. Optional mechanisms are available for clients to
+provide certificates for mutual authentication.
+- **Token-based authentication with Google**: gRPC provides a generic
+mechanism (described below) to attach metadata based credentials to requests
+and responses. Additional support for acquiring access tokens
+(typically OAuth2 tokens) while accessing Google APIs through gRPC is
+provided for certain auth flows: you can see how this works in our code
+examples below. In general this mechanism must be used *as well as* SSL/TLS
+on the channel - Google will not allow connections without SSL/TLS, and
+most gRPC language implementations will not let you send credentials on an
+unencrypted channel.
 
-   * **Token-based authentication with Google**: gRPC provides a generic
-     mechanism (described below) to attach metadata based credentials to
-     requests and responses. Additional support for acquiring access tokens
-     (typically OAuth2 tokens) while accessing Google APIs through gRPC is
-     provided for certain auth flows: you can see how this works in our code
-     examples below. In general this mechanism must be used *as well as* SSL/TLS
-     on the channel - Google will not allow connections without SSL/TLS, and
-     most gRPC language implementations will not let you send credentials on an
-     unencrypted channel.
-
-     <p class="note"> <strong>WARNING</strong>: Google credentials should only
-     be used to connect to Google services. Sending a Google issued OAuth2 token
-     to a non-Google service could result in this token being stolen and used to
-     impersonate the client to Google services.</p>
+<p class="note"> <strong>WARNING</strong>: Google credentials should only
+be used to connect to Google services. Sending a Google issued OAuth2 token
+to a non-Google service could result in this token being stolen and used to
+impersonate the client to Google services.</p>
 
 ## Authentication API
 
@@ -92,7 +91,7 @@ more languages in our Examples section below.
 // Create a default SSL ChannelCredentials object.
 auto channel_creds = grpc::SslCredentials(grpc::SslCredentialsOptions());
 // Create a channel using the credentials created in the previous step.
-auto channel = grpc::CreateChannel(server_name, creds);
+auto channel = grpc::CreateChannel(server_name, channel_creds);
 // Create a stub on the channel.
 std::unique_ptr<Greeter::Stub> stub(Greeter::NewStub(channel));
 // Make actual RPC calls on the stub.
@@ -177,6 +176,67 @@ These authentication mechanisms will be available in all gRPC's supported
 languages. The following sections demonstrate how authentication and
 authorization features described above appear in each language: more languages
 are coming soon.
+
+### Go
+
+#### Base case - no encryption or authentication
+
+Client:
+
+``` go
+conn, _ := grpc.Dial("localhost:50051", grpc.WithInsecure())
+// error handling omitted
+client := pb.NewGreeterClient(conn)
+// ...
+```
+
+Server:
+
+``` go
+s := grpc.NewServer()
+lis, _ := net.Listen("tcp", "localhost:50051")
+// error handling omitted
+s.Serve(lis)
+```
+
+#### With server authentication SSL/TLS
+
+Client:
+
+``` go
+creds := credentials.NewClientTLSFromCert(certFile, "")
+conn, _ := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(creds))
+// error handling omitted
+client := pb.NewGreeterClient(conn)
+// ...
+```
+
+Server:
+
+``` go
+creds := credentials.NewClientTLSFromCert(certFile, "")
+s := grpc.NewServer(grpc.Creds(creds))
+lis, _ := net.Listen("tcp", "localhost:50051")
+// error handling omitted
+s.Serve(lis)
+```
+
+#### Authenticate with Google
+
+``` go
+pool, _ := x509.SystemCertPool()
+// error handling omitted
+creds := credentials.NewClientTLSFromCert(pool, "")
+perRPC, _ := oauth.NewServiceAccountFromFile("service-account.json", scope)
+conn, _ := grpc.Dial(
+	"greeter.googleapis.com",
+	grpc.WithTransportCredentials(creds),
+	grpc.WithPerRPCCredentials(perRPC),
+)
+// error handling omitted
+client := pb.NewGreeterClient(conn)
+// ...
+```
 
 ### Ruby
 
@@ -301,22 +361,38 @@ channel = grpc.secure_channel('myservice.example.com:443', creds)
 stub = helloworld_pb2.GreeterStub(channel)
 ```
 
-#### Authenticate with Google
+#### Authenticate with Google using a JWT
 
 ```python
 import grpc
 import helloworld_pb2
-from oauth2client import client
 
-transport_creds = grpc.ssl_channel_credentials(open('roots.pem').read())
-credentials = client.GoogleCredentials.get_application_default()
-scoped_credentials = credentials.create_scoped([scope])
-def oauth2token_credentials(context, callback):
-  callback([('authorization', 'Bearer %s' % scoped_credentials.get_access_token().access_token)], None)
+from google import auth as google_auth
+from google.auth import jwt as google_auth_jwt
+from google.auth.transport import grpc as google_auth_transport_grpc
 
-auth_creds = grpc.metadata_call_credentials(oauth2token_credentials)
-channel_creds = grpc.composite_channel_credentials(transport_creds, auth_creds)
-channel = grpc.secure_channel('greeter.googleapis.com:443', channel_creds)
+credentials, _ = google_auth.default()
+jwt_creds = google_auth_jwt.OnDemandCredentials.from_signing_credentials(
+    credentials)
+channel = google_auth_transport_grpc.secure_authorized_channel(
+    jwt_creds, None, 'greeter.googleapis.com:443')
+stub = helloworld_pb2.GreeterStub(channel)
+```
+
+#### Authenticate with Google using an Oauth2 token
+
+```python
+import grpc
+import helloworld_pb2
+
+from google import auth as google_auth
+from google.auth.transport import grpc as google_auth_transport_grpc
+from google.auth.transport import requests as google_auth_transport_requests
+
+credentials, _ = google_auth.default(scopes=(scope,))
+request = google_auth_transport_requests.Request()
+channel = google_auth_transport_grpc.secure_authorized_channel(
+    credentials, request, 'greeter.googleapis.com:443')
 stub = helloworld_pb2.GreeterStub(channel)
 ```
 
@@ -476,4 +552,55 @@ $opts = [
   'update_metadata' => $auth->getUpdateMetadataFunc(),
 ];
 $client = new helloworld\GreeterClient('greeter.googleapis.com', $opts);
+```
+
+### Dart
+
+#### Base case - no encryption or authentication
+
+```dart
+final channel = new ClientChannel('localhost',
+      port: 50051,
+      options: const ChannelOptions(
+          credentials: const ChannelCredentials.insecure()));
+final stub = new GreeterClient(channel);
+```
+
+#### With server authentication SSL/TLS
+
+```dart
+// Load a custom roots file.
+final trustedRoot = new File('roots.pem').readAsBytesSync();
+final channelCredentials =
+    new ChannelCredentials.secure(certificates: trustedRoot);
+final channelOptions = new ChannelOptions(credentials: channelCredentials);
+final channel = new ClientChannel('myservice.example.com',
+    options: channelOptions);
+final client = new GreeterClient(channel);
+```
+
+#### Authenticate with Google
+
+```dart
+// Uses publicly trusted roots by default.
+final channel = new ClientChannel('greeter.googleapis.com');
+final serviceAccountJson =
+     new File('service-account.json').readAsStringSync();
+final credentials = new JwtServiceAccountAuthenticator(serviceAccountJson);
+final client =
+    new GreeterClient(channel, options: credentials.toCallOptions);
+```
+
+#### Authenticate a single RPC call
+
+```dart
+// Uses publicly trusted roots by default.
+final channel = new ClientChannel('greeter.googleapis.com');
+final client = new GreeterClient(channel);
+...
+final serviceAccountJson =
+     new File('service-account.json').readAsStringSync();
+final credentials = new JwtServiceAccountAuthenticator(serviceAccountJson);
+final response =
+    await client.sayHello(request, options: credentials.toCallOptions);
 ```

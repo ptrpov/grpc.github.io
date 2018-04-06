@@ -13,6 +13,8 @@ Objective-C with a simple working example.</p>
 ## Before you begin
 
 ### System requirement
+The minimum deployment iOS version for gRPC is 7.0.
+
 OS X El Capitan (version 10.11) or above is required to build and run this
 Quickstart.
 
@@ -55,13 +57,12 @@ Quickstart. Copy the source code from Github
 [repository](https://github.com/grpc/grpc):
 
 ```sh
-$ git clone https://github.com/grpc/grpc.git
+$ git clone --recursive -b {{ site.data.config.grpc_release_branch }} https://github.com/grpc/grpc.git
 ```
 
 ## Install gRPC plugins and libraries
 ```sh
 $ cd grpc
-$ git submodule update --init
 $ make
 $ [sudo] make install
 ```
@@ -69,7 +70,7 @@ $ [sudo] make install
 ## Install protoc compiler
 ```sh
 $ brew tap grpc/grpc
-$ brew install google-protobuf
+$ brew install protobuf
 ```
 
 ## Run the server
@@ -270,10 +271,13 @@ Install an older version of `activesupport`, then install CocoaPods:
 [sudo] gem install activesupport -v 4.2.6
 [sudo] gem install cocoapods
 ```
+**When installing dependencies with CocoaPods, error prompt `Unable to find a specification for !ProtoCompiler-gRPCPlugin`**
+
+Update the local clone of spec repo by running `pod repo update`
 
 **Compiler error when compiling `objective_c_plugin.cc`**
 
-Removing `google-protobuf` package with Homebrew before building gRPC may solve
+Removing `protobuf` package with Homebrew before building gRPC may solve
 this problem. We are working on a more elegant fix.
 
 **When building HellowWorld, error prompt `ld: unknown option: --no-as-needed`**
@@ -302,4 +306,14 @@ clone from Github, and build again.
 
 **Cannot find `protoc` when building HelloWorld**
 
-Run `brew install google-protobuf` to get `protoc` compiler.
+Run `brew install protobuf` to get `protoc` compiler.
+
+## What's next
+
+- Read a full explanation of how gRPC works in [What is gRPC?](../guides/)
+  and [gRPC Concepts](../guides/concepts.html)
+- Work through a more detailed tutorial in [gRPC Basics: Objective-C][]
+- Explore the Objective-C core API in its [reference
+  documentation](http://cocoadocs.org/docsets/gRPC/)
+
+[gRPC Basics: Objective-C]:../tutorials/basic/objective-c.html

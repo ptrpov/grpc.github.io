@@ -62,17 +62,15 @@ $ cd examples/cpp/route_guide
 
 You also should have the relevant tools installed to generate the server and
 client interface code - if you don't already, follow the setup instructions in
-[the C++ quick start guide](https://github.com/grpc/grpc/tree/
-{{ site.data.config.grpc_release_branch }}/examples/cpp).
+[the C++ quick start guide](/docs/quickstart/cpp.html).
 
 
 ## Defining the service
 
 Our first step (as you'll know from the [Overview](/docs/index.html)) is to
 define the gRPC *service* and the method *request* and *response* types using
-[protocol buffers]
-(https://developers.google.com/protocol-buffers/docs/overview). You can see the
-complete .proto file in
+[protocol buffers](https://developers.google.com/protocol-buffers/docs/overview).
+You can see the complete .proto file in
 [`examples/protos/route_guide.proto`](https://github.com/grpc/grpc/blob/
 {{ site.data.config.grpc_release_branch }}/examples/protos/route_guide.proto).
 
@@ -178,6 +176,7 @@ $ protoc -I ../../protos --cpp_out=. ../../protos/route_guide.proto
 ```
 
 Running this command generates the following files in your current directory:
+
 - `route_guide.pb.h`, the header which declares your generated message classes
 - `route_guide.pb.cc`, which contains the implementation of your message classes
 - `route_guide.grpc.pb.h`, the header which declares your generated service
@@ -186,9 +185,11 @@ Running this command generates the following files in your current directory:
   classes
 
 These contain:
+
 - All the protocol buffer code to populate, serialize, and retrieve our request
   and response message types
 - A class called `RouteGuide` that contains
+
    - a remote interface type (or *stub*) for clients to call with the methods
      defined in the `RouteGuide` service.
    - two abstract interfaces for servers to implement, also with the methods
@@ -205,6 +206,7 @@ to [Creating the client](#client) (though you might find it interesting
 anyway!).
 
 There are two parts to making our `RouteGuide` service do its job:
+
 - Implementing the service interface generated from our service definition:
   doing the actual "work" of our service.
 - Running a gRPC server to listen for requests from clients and return the
@@ -251,6 +253,12 @@ information. In the method we populate the `Feature` with the appropriate
 information, and then `return` with an `OK` status to tell gRPC that we've
 finished dealing with the RPC and that the `Feature` can be returned to the
 client.
+
+Note that all service methods can (and will!) be called from multiple threads at
+the same time. You have to make sure that your method implementations are
+thread safe. In our example, `feature_list_` is never changed after
+construction, so it is safe by design. But if `feature_list_` would change during
+the lifetime of the service, we would need to synchronize access to this member.
 
 Now let's look at something a bit more complicated - a streaming RPC.
 `ListFeatures` is a server-side streaming RPC, so we need to send back multiple
@@ -370,12 +378,12 @@ service. You can see our complete example client code in
 To call service methods, we first need to create a *stub*.
 
 First we need to create a gRPC *channel* for our stub, specifying the server
-address and port we want to connect to and any special channel arguments - in
-our case we'll use the default `ChannelArguments` and no SSL:
+address and port we want to connect to - in our case we'll use no SSL:
 
 ```cpp
-grpc::CreateChannel("localhost:50051", grpc::InsecureCredentials(), ChannelArguments());
+grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
 ```
+Note: In order to set additional options for the *channeL*, use the `grpc::CreateCustomChannel()` api with any special channel arguments - `grpc::ChannelArguments`
 
 Now we can use the channel to create our stub using the `NewStub` method provided in the `RouteGuide` class we generated from our .proto.
 

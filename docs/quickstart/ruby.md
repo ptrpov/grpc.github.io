@@ -48,7 +48,7 @@ and other tutorials):
 
 ```sh
 $ # Clone the repository to get the example code:
-$ git clone https://github.com/grpc/grpc
+$ git clone -b {{ site.data.config.grpc_release_branch }} https://github.com/grpc/grpc
 $ # Navigate to the "hello, world" Ruby example:
 $ cd grpc/examples/ruby
 ```
@@ -135,7 +135,7 @@ service definition. From the `examples/ruby/` directory:
 $ grpc_tools_ruby_protoc -I ../protos --ruby_out=lib --grpc_out=lib ../protos/helloworld.proto
 ```
 
-This regenerates `lib/helloworld_services.rb`, which contains our generated
+This regenerates `lib/helloworld_services_pb.rb`, which contains our generated
 client and server classes.
 
 ### Update the server
@@ -166,7 +166,7 @@ def main
   user = ARGV.size > 0 ?  ARGV[0] : 'world'
   message = stub.say_hello(Helloworld::HelloRequest.new(name: user)).message
   p "Greeting: #{message}"
-  message = stub.say_hello_again(HelloWorld::HelloRequest.new(name: user)).message
+  message = stub.say_hello_again(Helloworld::HelloRequest.new(name: user)).message
   p "Greeting: #{message}"
 end
 ```
@@ -189,10 +189,10 @@ Just like we did before, from the `examples/ruby` directory:
 
 ## What's next
 
- - Read a full explanation of this example and how gRPC works in our
-   [Overview](http://www.grpc.io/docs/)
+ - Read a full explanation of how gRPC works in [What is gRPC?](../guides/)
+   and [gRPC Concepts](../guides/concepts.html)
  - Work through a more detailed tutorial in [gRPC Basics: Ruby][]
  - Explore the gRPC Ruby core API in its [reference
    documentation](http://www.rubydoc.info/gems/grpc)
 
-[gRPC Basics: Ruby]:http://www.grpc.io/docs/tutorials/basic/ruby.html
+[gRPC Basics: Ruby]:../tutorials/basic/ruby.html

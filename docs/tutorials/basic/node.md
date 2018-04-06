@@ -75,7 +75,7 @@ $ cd examples/node
 
 You also should have the relevant tools installed to generate the server and
 client interface code - if you don't already, follow the setup instructions in
-[the Node.js quick start guide](../docs/installation/node.html).
+[the Node.js quick start guide](/docs/quickstart/node.html).
 
 
 ## Defining the service
@@ -125,7 +125,7 @@ rpc ListFeatures(Rectangle) returns (stream Feature) {}
 - A *client-side streaming RPC* where the client writes a sequence of messages
   and sends them to the server, again using a provided stream. Once the client
   has finished writing the messages, it waits for the server to read them all
-  and return its response. You specify a server-side streaming method by placing
+  and return its response. You specify a client-side streaming method by placing
   the `stream` keyword before the *request* type.
 
 ```protobuf
@@ -173,16 +173,17 @@ To load a `.proto` file, simply `require` the gRPC library, then use its
 `load()` method:
 
 ```js
+var PROTO_PATH = __dirname + '/../../../protos/route_guide.proto';
 var grpc = require('grpc');
-var protoDescriptor = grpc.load(__dirname + '/route_guide.proto');
+var protoDescriptor = grpc.load(PROTO_PATH);
 // The protoDescriptor object has the full package hierarchy
-var example = protoDescriptor.examples;
+var routeguide = protoDescriptor.routeguide;
 ```
 
-Once you've done this, the stub constructor is in the `examples` namespace
-(`protoDescriptor.examples.RouteGuide`) and the service descriptor (which is
+Once you've done this, the stub constructor is in the `routeguide` namespace
+(`protoDescriptor.routeguide.RouteGuide`) and the service descriptor (which is
 used to create a server) is a property of the stub
-(`protoDescriptor.examples.RouteGuide.service`);
+(`protoDescriptor.routeguide.RouteGuide.service`);
 
 <a name="server"></a>
 
@@ -210,7 +211,7 @@ As you can see, our server has a `Server` constructor generated from the
 `RouteGuide.service` descriptor object
 
 ```js
-var Server = grpc.buildServer([examples.RouteGuide.service]);
+var Server = new grpc.Server();
 ```
 In this case we're implementing the *asynchronous* version of `RouteGuide`,
 which provides our default gRPC server behaviour.
@@ -377,7 +378,7 @@ need to call the RouteGuide stub constructor, specifying the server address and
 port.
 
 ```js
-new example.RouteGuide('localhost:50051', grpc.Credentials.createInsecure());
+new example.RouteGuide('localhost:50051', grpc.credentials.createInsecure());
 ```
 
 ### Calling service methods

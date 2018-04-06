@@ -30,7 +30,7 @@ With gRPC we can define our service once in a .proto file and implement clients 
 The example code for our tutorial is in [grpc-java's examples/android](https://github.com/grpc/grpc-java/tree/{{ site.data.config.grpc_release_branch }}/examples/android). To download the example, clone the `grpc-java` repository by running the following command:
 
 ```
-$ git clone https://github.com/grpc/grpc-java.git
+$ git clone -b {{ site.data.config.grpc_java_release_tag }} https://github.com/grpc/grpc-java.git
 ```
 
 Then change your current directory to `grpc-java/examples/android`:
@@ -81,7 +81,7 @@ rpc GetFeature(Point) returns (Feature) {}
 rpc ListFeatures(Rectangle) returns (stream Feature) {}
 ```
 
-- A *client-side streaming RPC* where the client writes a sequence of messages and sends them to the server, again using a provided stream. Once the client has finished writing the messages, it waits for the server to read them all and return its response. You specify a server-side streaming method by placing the `stream` keyword before the *request* type.
+- A *client-side streaming RPC* where the client writes a sequence of messages and sends them to the server, again using a provided stream. Once the client has finished writing the messages, it waits for the server to read them all and return its response. You specify a client-side streaming method by placing the `stream` keyword before the *request* type.
 
 ```proto
 // Accepts a stream of Points on a route being traversed, returning a
@@ -165,7 +165,7 @@ asyncStub = RouteGuideGrpc.newStub(mChannel);
 
 ### Calling service methods
 
-Now let's look at how we call our service methods. 
+Now let's look at how we call our service methods.
 
 #### Simple RPC
 

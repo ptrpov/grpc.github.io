@@ -16,29 +16,28 @@ working example.</p>
 
 #### Install gRPC
 
-To install gRPC on your system, follow the instructions to build from source
-[here](https://github.com/grpc/grpc/blob/master/INSTALL.md).
+To install gRPC on your system, follow the [instructions to build from
+source](https://github.com/grpc/grpc/blob/master/INSTALL.md).
+
+To run the example code, please ensure `pkg-config` is installed on your
+machine before you build and install gRPC in the previous step, since the
+example `Makefile`s try to look up the installed gRPC path using `pkg-config`.
+On Debian-based systems like Ubuntu, this can usually be done via
+`sudo apt-get install pkg-config`.
 
 #### Install Protocol Buffers v3
 
-While not mandatory, gRPC usually leverages Protocol Buffers v3 for service
-definitions and data serialization. If you don't already have it installed on
-your system, you can install the version cloned alongside gRPC:
+While not mandatory to use gRPC, gRPC applications usually leverage Protocol
+Buffers v3 for service definitions and data serialization, and our example code
+uses Protocol Buffers as well as gRPC. If you don't already have it installed on
+your system, you can install the version cloned alongside gRPC. First ensure
+that you are running these commands in the gRPC tree you just built in the from
+the previous step.
 
 ```sh
-$ git clone -b {{ site.data.config.grpc_release_branch }} https://github.com/grpc/grpc
-$ cd grpc/third_party/protobuf
-$ make
-$ sudo make install
+$ cd third_party/protobuf
+$ make && sudo make install
 ```
-
-See [the official Protocol Buffers install
-guide](https://github.com/google/protobuf/blob/master/src/README.md) for
-details.
-
-Note that you also need `pkg-config` installed on your system. On Ubuntu/Debian
-systems, this can be done via `sudo apt-get install pkg-config`.
-
 
 ## Build the example
 
@@ -82,7 +81,7 @@ Congratulations! You've just run a client-server application with gRPC.
 Now let's look at how to update the application with an extra method on the
 server for the client to call. Our gRPC service is defined using protocol
 buffers; you can find out lots more about how to define a service in a `.proto`
-file in [What is gRPC?](http://www.grpc.io/docs/#what-is-grpc) and [gRPC Basics:
+file in [What is gRPC?](/docs/#what-is-grpc) and [gRPC Basics:
 C++][]. For now all you need to know is that both the server and the client
 "stub" have a `SayHello` RPC method that takes a `HelloRequest` parameter from
 the client and returns a `HelloResponse` from the server, and that this method
@@ -166,7 +165,7 @@ class GreeterServiceImpl final : public Greeter::Service {
      // ... (pre-existing code)
   }
 
-  Status SayHelloAgain(ServerContext* context, const HelloRequest* request
+  Status SayHelloAgain(ServerContext* context, const HelloRequest* request,
                        HelloReply* reply) override {
     std::string prefix("Hello again ");
     reply->set_message(prefix + request->name());
@@ -256,10 +255,10 @@ Just like we did before, from the `examples/cpp/helloworld` directory:
 
 ## What's next
 
-- Read a full explanation of this example and how gRPC works in our
-  [Overview](http://www.grpc.io/docs/)
+- Read a full explanation of how gRPC works in [What is gRPC?](../guides/)
+  and [gRPC Concepts](../guides/concepts.html)
 - Work through a more detailed tutorial in [gRPC Basics: C++][]
 - Explore the gRPC C++ core API in its [reference
-  documentation](http://www.grpc.io/grpc/cpp/)
+  documentation](/grpc/cpp/)
 
-[gRPC Basics: C++]:http://www.grpc.io/docs/tutorials/basic/c.html
+[gRPC Basics: C++]:../tutorials/basic/c.html

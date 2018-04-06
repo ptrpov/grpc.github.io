@@ -1,7 +1,7 @@
 ---
 bodyclass: docs
 layout: docs
-headline: gRPC Performance Benchmarking
+headline: Benchmarking
 sidenav: doc-side-guides-nav.html
 type: markdown
 ---
@@ -23,9 +23,16 @@ workflow. Multi-language performance tests run hourly against
 the master branch, and these numbers are reported to a dashboard for
 visualization.
 
-  * [Multi-language performance dashboard @v1.0.0](https://performance-dot-grpc-testing.appspot.com/explore?dashboard=5712453606309888)
-  * [Multi-language performance dashboard @master](https://performance-dot-grpc-testing.appspot.com/explore?dashboard=5760820306771968)
-  * [C++ detailed performance dashboard @master](https://performance-dot-grpc-testing.appspot.com/explore?dashboard=5685265389584384)
+  * [Multi-language performance dashboard @latest_release (lastest available stable release)](https://performance-dot-grpc-testing.appspot.com/explore?dashboard=5636470266134528) 
+  * [Multi-language performance dashboard @master (latest dev version)](https://performance-dot-grpc-testing.appspot.com/explore?dashboard=5652536396611584)
+  * [C++ detailed performance dashboard @master (latest dev version)](https://performance-dot-grpc-testing.appspot.com/explore?dashboard=5632763172487168)
+
+Additional benchmarking provides fine grained insights into where
+CPU is spent.
+
+  * [C++ full-stack microbenchmarks](https://performance-dot-grpc-testing.appspot.com/explore?dashboard=5684961520648192)
+  * [C Core filter benchmarks](https://performance-dot-grpc-testing.appspot.com/explore?dashboard=5740240702537728)
+  * [C Core shared component benchmarks](https://performance-dot-grpc-testing.appspot.com/explore?dashboard=5641826627223552&container=789696829&widget=512792852)
 
 ## Performance testing design
 
@@ -63,10 +70,6 @@ clients and servers at master:
   * Python
   * Ruby
 
-PHP does not have any performance testing because our performance
-tests are implemented as gRPC servers, which are not supported in
-PHP. Mobile performance testing is also currently not supported.
-
 Additionally, all languages derived from C core have limited
 performance testing (smoke testing) conducted at every pull request.
 
@@ -75,6 +78,12 @@ performance tests, all languages are tested as clients against a C++
 server, and as servers against a C++ client. This test aims to provide
 the current upper bound of performance for a given language's client or
 server implementation without testing the other side.
+
+Although PHP or mobile environments do not support a gRPC server
+(which is needed for our performance tests), their client-side
+performance can be benchmarked using a proxy WorkerService written in
+another language. This code is implemented for PHP but is not yet in 
+continuous testing mode.
 
 <a name="Scenarios under test"></a>
 

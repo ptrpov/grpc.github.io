@@ -17,7 +17,7 @@ headline: 'Frequently Asked Questions'
                         <h6 class="arrow-r">What is gRPC?</h6>
                         <div class="submenu-content">
                             <p>gRPC is a modern, open source remote procedure call (RPC) framework that can run anywhere. It enables client and server applications to communicate transparently, and makes it easier to build connected systems.</p>
-                            <p> Read the longer <a href="{{ site.baseurl }}/posts/principles">Motivation &amp; Design Principles</a> post for background on why we created gRPC.</p>
+                            <p> Read the longer <a href="{{ site.baseurl }}/blog/principles">Motivation &amp; Design Principles</a> post for background on why we created gRPC.</p>
                         </div>
                     </li>
                     <li class="submenu">
@@ -45,29 +45,30 @@ headline: 'Frequently Asked Questions'
                     <li class="submenu">
                         <h6 class="arrow-r">Who’s using this and why?</h6>
                         <div class="submenu-content">
-                            <p>Google has been using a lot of the underlying technologies and concepts in gRPC for a long time. The current implementation is being used in several of Google’s cloud products and Google externally facing APIs. It is also being used by <a href="http://corner.squareup.com/2015/02/grpc.html">Square</a>,  <a href="https://github.com/Netflix/ribbon">Netflix</a>, <a href="https://blog.gopheracademy.com/advent-2015/etcd-distributed-key-value-store-with-grpc-http2/">CoreOS</a>, <a href="https://blog.docker.com/2015/12/containerd-daemon-to-control-runc/">Docker</a>, <a href="https://github.com/cockroachdb/cockroach">Cockroachdb</a>, <a href="https://github.com/CiscoDevNet/grpc-getting-started">Cisco</a>, <a href="https://github.com/Juniper/open-nti">Juniper Networks</a> and many other organizations and individuals.</p>
+                            <p> gRPC is a CNCF project.</p>
+
+                            <p>Google has been using a lot of the underlying technologies and concepts in gRPC for a long time. The current implementation is being used in several of Google’s cloud products and Google externally facing APIs. It is also being used by <a href="https://corner.squareup.com/2015/02/grpc.html">Square</a>,  <a href="https://github.com/Netflix/ribbon">Netflix</a>, <a href="https://blog.gopheracademy.com/advent-2015/etcd-distributed-key-value-store-with-grpc-http2/">CoreOS</a>, <a href="https://blog.docker.com/2015/12/containerd-daemon-to-control-runc/">Docker</a>, <a href="https://github.com/cockroachdb/cockroach">Cockroachdb</a>, <a href="https://github.com/CiscoDevNet/grpc-getting-started">Cisco</a>, <a href="https://github.com/Juniper/open-nti">Juniper Networks</a> and many other organizations and individuals.</p>
                         </div>
                     </li>
-
 
                     <li class="submenu">
                         <h6 class="arrow-r">What programming languages are supported?</h6>
                         <div class="submenu-content">
-                            <p>C++, Java, Objective-C, Python, Ruby, Go, C#, Node.js.
-                            All of the above mentioned languages are now in GA and follow semantic versioning.</p>
-                            <p>Java implementation supports Android and Objective-C is targeted at iOS and are also at 1.0 now.</p>
+                            <p>C++, Java (incl. support for Android), Objective-C (for iOS), Python, Ruby, Go, C#, Node.js
+                            are in GA and follow semantic versioning.</p>
+                            <p>Dart support is in beta.</p>                            
                         </div>
                     </li>
                     <li class="submenu">
                         <h6 class="arrow-r">How do I get started using gRPC?</h6>
                         <div class="submenu-content">
-                            <p>You can start with installation of gRPC by following instructions from <a href="{{site.baseurl}}/docs/quickstart">here</a>. Or head over to the <a href="http://github.com/grpc">gRPC GitHub org page</a>, pick the runtime or language you are interested in and follow the README instructions.</p>
+                            <p>You can start with installation of gRPC by following instructions from <a href="{{site.baseurl}}/docs/quickstart">here</a>. Or head over to the <a href="https://github.com/grpc">gRPC GitHub org page</a>, pick the runtime or language you are interested in and follow the README instructions.</p>
                         </div>
                     </li>
                     <li class="submenu">
                         <h6 class="arrow-r">What is the license?</h6>
                         <div class="submenu-content">
-                            <p>All implementations are 3-clause BSD.</p>
+                            <p>All implementations are licensed under <a href="https://github.com/grpc/grpc/blob/master/LICENSE">Apache 2.0</a>.</p>
                         </div>
                     </li>
 
@@ -87,14 +88,31 @@ headline: 'Frequently Asked Questions'
                     <li class="submenu">
                         <h6 class="arrow-r">What is the roadmap?</h6>
                         <div class="submenu-content">
-                            <p>The roadmap is being tracked in GitHub <a target="_blank" href="{{ site.data.config.milestones_link }}">milestones</a>. Please refer to the respective milestones in the gRPC, gRPC-java and gRPC-go repositories under the GitHub gRPC org.</p>
+                            <p>The gRPC project has an RFC process, through which new features are designed and approved for implementation. They are tracked in <a target="_blank" href="https://github.com/grpc/proposal"> this repository</a>. </p>
                         </div>
                     </li>
-
+                    <li class="submenu">
+                        <h6 class="arrow-r">What is the latest gRPC Version?</h6>
+                        <div class="submenu-content">
+                            <p>The latest release branch is {{site.data.config.grpc_release_branch}}</p>
+                        </div>
+                    </li>
+                    <li class="submenu">
+                        <h6 class="arrow-r">How long are gRPC releases supported for?</h6>
+                        <div class="submenu-content">
+                            <p>The gRPC project does not do LTS releases. Given the rolling release model above, we support the current, latest release and the release prior to that. Support here means bug fixes and security fixes.</p>
+                        </div>
+                    </li>
+                    <li class="submenu">
+                        <h6 class="arrow-r">When do gRPC releases happen?</h6>
+                        <div class="submenu-content">
+                            <p>The gRPC project works in a model where the tip of the master branch is stable at all times. The project (across the various runtimes) targets to ship checkpoint releases every 6 weeks on a best effort basis. If for some reason, a release is skipped by a particular runtime, we may opt to skip that release altogether, and ship the next release, along with the other runtimes and catch up.</p>
+                        </div>
+                    </li>
                     <li class="submenu">
                         <h6 class="arrow-r">Can I use it in the browser?</h6>
                         <div class="submenu-content">
-                            <p>Not yet. This is an area that's being actively explored and we welcome feedback and contributions. We are collecting names of people interested in early access program <a href="https://docs.google.com/forms/u/0/d/15iRDHoP-VBenc4hWgKn7bk7IirJLgs0uh88nw1vi_Hc/edit">here</a>. There is node.js support for server side JavaScript.</p>
+                            <p>The <a href="https://github.com/grpc/grpc-web" target="_blank">gRPC-Web</a> project is currently Beta. Please try it and give us feedback!</p>
                         </div>
                     </li>
 
@@ -102,7 +120,7 @@ headline: 'Frequently Asked Questions'
                     <li class="submenu">
                         <h6 class="arrow-r">Can I use gRPC with my favorite data format (JSON, Protobuf, Thrift, XML) ?</h6>
                         <div class="submenu-content">
-                            <p>Yes. gRPC is designed to be extensible to support multiple content types. The initial release contains support for Protobuf and we welcome contributions to add support for others.</p>
+                            <p>Yes. gRPC is designed to be extensible to support multiple content types. The initial release contains support for Protobuf and with external support for other content types such as FlatBuffers and Thrift, at varying levels of maturity.</p>
                         </div>
                     </li>
 
@@ -127,17 +145,9 @@ headline: 'Frequently Asked Questions'
                     </li>
 
                     <li class="submenu">
-                        <h6 class="arrow-r">Can I use it in the browser?</h6>
-                        <div class="submenu-content">
-                            <p>Not yet but we are working to make unary and server side streaming work with gRPC-web project. Please sign up for <a href="https://docs.google.com/a/google.com/forms/d/15iRDHoP-VBenc4hWgKn7bk7IirJLgs0uh88nw1vi_Hc/edit">early access </a> if you are interested.</p>
-                        </div>
-                    </li>
-
-
-                    <li class="submenu">
                         <h6 class="arrow-r">Why is gRPC better/worse than REST?</h6>
                         <div class="submenu-content">
-                            <p>gRPC largely follows HTTP semantics over HTTP/2 but we explicitly allow for full-duplex streaming. We diverge from typical REST conventions as we use static paths for performance reasons during call dispatch as parsing call parameters from paths, query parameters and payload body adds latency and complexity. We have also formalized a set of errors that we believe are more directly applicable to API uses cases than the HTTP status codes.</p>
+                            <p>gRPC largely follows HTTP semantics over HTTP/2 but we explicitly allow for full-duplex streaming. We diverge from typical REST conventions as we use static paths for performance reasons during call dispatch as parsing call parameters from paths, query parameters and payload body adds latency and complexity. We have also formalized a set of errors that we believe are more directly applicable to API use cases than the HTTP status codes.</p>
                         </div>
                     </li>
 

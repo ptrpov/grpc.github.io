@@ -75,7 +75,7 @@ As we're generating Java code in this example, we've specified a `java_package`
 file option in our .proto:
 
 ```proto
-option java_package = "io.grpc.examples";
+option java_package = "io.grpc.examples.routeguide";
 ```
 
 This specifies the package we want to use for our generated Java classes. If no
@@ -122,7 +122,7 @@ rpc ListFeatures(Rectangle) returns (stream Feature) {}
 - A *client-side streaming RPC* where the client writes a sequence of messages
   and sends them to the server, again using a provided stream. Once the client
   has finished writing the messages, it waits for the server to read them all
-  and return its response. You specify a server-side streaming method by placing
+  and return its response. You specify a client-side streaming method by placing
   the `stream` keyword before the *request* type.
 
 ```proto
@@ -204,7 +204,7 @@ There are two parts to making our `RouteGuide` service do its job:
   service responses.
 
 You can find our example `RouteGuide` server in
-[grpc-java/examples/src/main/java/io/grpc/examples/RouteGuideServer.java](https://github.com/grpc/grpc-java/blob/master/examples/src/main/java/io/grpc/examples/routeguide/RouteGuideServer.java).
+[grpc-java/examples/src/main/java/io/grpc/examples/routeguide/RouteGuideServer.java](https://github.com/grpc/grpc-java/blob/master/examples/src/main/java/io/grpc/examples/routeguide/RouteGuideServer.java).
 Let's take a closer look at how it works.
 
 ### Implementing RouteGuide
@@ -218,7 +218,9 @@ private static class RouteGuideService extends RouteGuideGrpc.RouteGuideImplBase
 }
 ```
 
-#### Simple RPC `RouteGuideService` implements all our service methods. Let's
+#### Simple RPC 
+
+`RouteGuideService` implements all our service methods. Let's
 look at the simplest type first, `GetFeature`, which just gets a `Point` from
 the client and returns the corresponding feature information from its database
 in a `Feature`.
@@ -349,7 +351,7 @@ public StreamObserver<Point> recordRoute(final StreamObserver<RouteSummary> resp
 
 As you can see, like the previous method types our method gets a
 `StreamObserver` response observer parameter, but this time it returns a
-`StreamObserver` for the client to write its `Point`s. 
+`StreamObserver` for the client to write its `Point`s.
 
 In the method body we instantiate an anonymous `StreamObserver` to return, in
 which we:
@@ -361,8 +363,9 @@ which we:
   method's own response observer's `onNext()` with our `RouteSummary`, and then
   call its `onCompleted()` method to finish the call from the server side.
 
-#### Bidirectional streaming RPC Finally, let's look at our bidirectional
-streaming RPC `RouteChat()`.
+#### Bidirectional streaming RPC
+
+Finally, let's look at our bidirectional streaming RPC `RouteChat()`.
 
 ```java
 @Override
@@ -444,7 +447,7 @@ To do this, we:
 
 In this section, we'll look at creating a Java client for our `RouteGuide`
 service. You can see our complete example client code in
-[grpc-java/examples/src/main/java/io/grpc/examples/RouteGuideClient.java](https://github.com/grpc/grpc-java/blob/master/examples/src/main/java/io/grpc/examples/routeguide/RouteGuideClient.java).
+[grpc-java/examples/src/main/java/io/grpc/examples/routeguide/RouteGuideClient.java](https://github.com/grpc/grpc-java/blob/master/examples/src/main/java/io/grpc/examples/routeguide/RouteGuideClient.java).
 
 ### Creating a stub
 
@@ -484,7 +487,7 @@ asyncStub = RouteGuideGrpc.newStub(channel);
 
 ### Calling service methods
 
-Now let's look at how we call our service methods. 
+Now let's look at how we call our service methods.
 
 #### Simple RPC
 
